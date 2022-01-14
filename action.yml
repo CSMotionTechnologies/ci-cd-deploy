@@ -1,0 +1,77 @@
+name: 'Deploy'
+description: 'Builds the project'
+inputs:
+  deploy-token:
+    description: "The deploy token"
+    required: true
+  role-to-assume:
+    description: "The role to assume for aws deployment"
+    required: true
+  service-name:
+    description: "The name of the service"
+    required: true
+  deployment-id:
+    description: "Deployment id"
+    required: true
+  environment-name:
+    description: "The environment"
+    required: true
+  slack-webhook:
+    description: "The webhook endpoint"
+    required: true
+  slack-channel:
+    description: "The channel"
+    required: true
+  slack-username:
+    description: "The username"
+    required: true
+  slack-message:
+    description: "The message"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: ${{ inputs.role-to-assume }}
+        role-session-name: ${{ inputs.environment-name }}-${{ inputs.service-name }}-deploy
+        aws-region: ap-southeast-2
+    - id: install-aws-cli
+      uses: unfor19/install-aws-cli-action@v1
+      with:
+        version: 2
+    - name: Install AWS Lambda Tools
+      run: dotnet tool install -g Amazon.Lambda.Tools    
+      shell: bash
+    - uses: actions/checkout@v2
+    - name: Go to src directory
+      run: |
+        sh CustomConfiguration.sh
+        cd src/Api
+        dotnet lambda deploy-serverless --stackname ${{ inputs.environment-name }}-${{ inputs.service-name }} --region ap-southeast-2 --s3-bucket cs-sam-deploy-${{ inputs.environment-name }} --template-parameters EnvironmentName=${{ inputs.environment-name }}
+      shell: bash
+    - name: Update deployment status (success)
+      if: success()
+      uses: chrnorm/deployment-status@releases/v1
+      with:
+        token: "${{ inputs.deploy-token }}"
+        state: "success"
+        deployment_id: ${{ inputs.deployment-id }}
+    - name: Update deployment status (failure)
+      if: failure()
+      uses: chrnorm/deployment-status@releases/v1
+      with:
+        token: "${{ inputs.deploy-token }}"
+        state: "failure"
+        deployment_id: ${{ inputs.deployment-id }}
+    - name: Notify Slack
+      uses: rtCamp/action-slack-notify@v2.2.0
+      env:
+        SLACK_ICON: https://secureservercdn.net/104.238.69.231/76w.650.myftpupload.com/wp-content/uploads/2020/04/Placie-Logo.png
+        SLACK_WEBHOOK: ${{ inputs.slack-webhook }}
+        SLACK_CHANNEL: ${{ inputs.slack-channel }}
+        SLACK_USERNAME: ${{ inputs.slack-username }}
+        SLACK_MESSAGE: ${{ inputs.slack-message }}
+        SLACK_TITLE: 'Environment'
+        SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
