@@ -34,8 +34,8 @@ runs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        role-to-assume: ${{ format('{0}_{1}_{2}', ENVIRONMENT, inputs.environment-name, ROLETOASSUME) }}
-        role-session-name: ${{ format('{0}_{1}-{2}-{3}', ENVIRONMENT, inputs.environment-name, inputs.service-name, deploy) }}
+        role-to-assume: ${{ format('{0}_{1}_{2}', "ENVIRONMENT", inputs.environment-name, "ROLETOASSUME") }}
+        role-session-name: ${{ format('{0}_{1}-{2}-{3}', "ENVIRONMENT", inputs.environment-name, inputs.service-name, "deploy") }}
         aws-region: ap-southeast-2
     - id: install-aws-cli
       uses: unfor19/install-aws-cli-action@v1
