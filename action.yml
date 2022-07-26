@@ -34,7 +34,7 @@ runs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        role-to-assume: ENVIRONMENT_${{ inputs.environment-name }}_ROLETOASSUME
+        role-to-assume: ${{ENVIRONMENT_${{ inputs.environment-name }}_ROLETOASSUME}}
         role-session-name: ENVIRONMENT_${{ inputs.environment-name }}-${{ inputs.service-name }}-deploy
         aws-region: ap-southeast-2
     - id: install-aws-cli
