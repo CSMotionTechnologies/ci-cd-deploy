@@ -34,7 +34,7 @@ runs:
     - name: Set variables
       shell: bash
       run: |
-          echo "::set-env name=ROLE-TO-ASSUME::format('{0}_{1}_{2}', 'ENVIRONMENT', inputs.environment-name, 'ROLETOASSUME')"
+          echo "ROLE-TO-ASSUME=format('{0}_{1}_{2}', 'ENVIRONMENT', inputs.environment-name, 'ROLETOASSUME')" >> $GITHUB_ENV
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
