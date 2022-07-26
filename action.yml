@@ -36,13 +36,13 @@ runs:
         key: "${{inputs.environment-name}}"
         map: |
           {
-            "PROD": {
-              "role-to-assume": "arn:aws:iam::202533406843:role/github-actions-role"
+            "prod": {
+              "role-to-assume": "arn:aws:iam::202533406843:role/github-actions-role",
             },
-            "STAGE": {
+            "stage": {
               "role-to-assume": "arn:aws:iam::947680925061:role/github-actions-role"
             },
-            "DEV": {
+            "dev": {
               "role-to-assume": "arn:aws:iam::947680925061:role/github-actions-role"
             }
           }
