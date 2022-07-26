@@ -37,7 +37,7 @@ runs:
         map: |
           {
             "prod": {
-              "role-to-assume": "arn:aws:iam::202533406843:role/github-actions-role",
+              "role-to-assume": "arn:aws:iam::202533406843:role/github-actions-role"
             },
             "stage": {
               "role-to-assume": "arn:aws:iam::947680925061:role/github-actions-role"
