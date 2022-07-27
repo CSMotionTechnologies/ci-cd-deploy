@@ -4,9 +4,6 @@ inputs:
   deploy-token:
     description: "The deploy token"
     required: true
-  role-to-assume:
-    description: "The role to assume for aws deployment"
-    required: true
   service-name:
     description: "The name of the service"
     required: true
